@@ -1,3 +1,3 @@
 # Issues
 
-## Example Project for **Programming Elixir** by Dave Thomas
+Example Project for **Programming Elixir** by Dave Thomas
