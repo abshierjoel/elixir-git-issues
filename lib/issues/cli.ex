@@ -15,7 +15,7 @@ defmodule Issues.CLI do
 
   @doc """
   `argv` can be -h or --help, which returns :help.
-
+  
   Otherwise it is a github user name, project name, and (optionally)
   the number of entries to format.any()
   Return a tuple of `{ user, project, count }`, or `:help` if help was given
@@ -36,6 +36,13 @@ defmodule Issues.CLI do
   defp args_to_interal_representation(_),
     do: :help
 
+  defp process({user, project, count}) do
+    Issues.GithubIssues.fetch(user, project)
+    |> decode_response()
+    |> sort_into_descending_order()
+    |> last(count)
+  end
+
   defp process(:help) do
     IO.puts("""
     usage: issues <user> <project> [ count | #{@default_count} ]
@@ -44,7 +51,20 @@ defmodule Issues.CLI do
     System.halt(0)
   end
 
-  defp process({user, project, _count}) do
-    Issues.GithubIssues.fetch(user, project)
+  defp last(list, count) do
+    list
+    |> Enum.take(count)
+    |> Enum.reverse()
+  end
+
+  defp decode_response({:ok, body}), do: body
+
+  defp decode_response({:error, error}) do
+    IO.puts("Error fetching from Github: #{error["message"]}")
+    System.halt(0)
+  end
+
+  def sort_into_descending_order(list) do
+    list |> Enum.sort(&(&1["created_at"] >= &2["created_at"]))
   end
 end
