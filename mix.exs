@@ -1,5 +1,6 @@
 defmodule Issues.MixProject do
   use Mix.Project
+  use Mix.Config
 
   def project do
     [

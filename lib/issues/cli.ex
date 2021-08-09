@@ -41,6 +41,7 @@ defmodule Issues.CLI do
     |> decode_response()
     |> sort_into_descending_order()
     |> last(count)
+    |> Issues.TableFormatter.print_table(["number", "created_at", "title"])
   end
 
   defp process(:help) do
