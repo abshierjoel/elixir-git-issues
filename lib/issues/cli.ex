@@ -36,7 +36,7 @@ defmodule Issues.CLI do
   defp args_to_interal_representation(_),
     do: :help
 
-  defp process({user, project, count}) do
+  def process({user, project, count}) do
     Issues.GithubIssues.fetch(user, project)
     |> decode_response()
     |> sort_into_descending_order()
@@ -44,7 +44,7 @@ defmodule Issues.CLI do
     |> Issues.TableFormatter.print_table(["number", "created_at", "title"])
   end
 
-  defp process(:help) do
+  def process(:help) do
     IO.puts("""
     usage: issues <user> <project> [ count | #{@default_count} ]
     """)
